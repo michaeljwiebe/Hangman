@@ -9,35 +9,47 @@
 
 var wordBank = ["sunshine","JavaScript","gyro","Amsterdam"];
 var hintBank = ["brightnass", "adaptive, interactive!", "Kostas' snack", "Across the pond"];
-// var startBtn = document.getElementsByClassName["start"][0];
 var startBtn = document.getElementsByClassName("start")[0];
+var guessInput = document.getElementsByClassName("guess")[0];
+var guesses = document.getElementsByClassName("guesses")[0];
 var hintDisplay = document.getElementsByClassName("hint")[0];
 var gameBoard = document.getElementsByClassName("game-board")[0];
 var round = 0;
+var i;
 var wordArrayBeingGuessed;
+var letterDivArray = [];
 
 startBtn.addEventListener("click", function(){
 	initGame()
 	startBtn.style.display = "none";
 });
+document.addEventListener("keypress", function(){
+		guessLetter(event.key);
+});
 
 function initGame(){
-	var i = 0;
+	i = 0;
 	wordArrayBeingGuessed = wordBank[round].split("");
 	wordArrayBeingGuessed.forEach(function(letter){
-		gameBoard
-		gameBoard.innerHTML += "<div class='letter letter" + i + "'>" + "__"+ "<span class='letter'>" + letter + "</span></div>";
+		gameBoard.innerHTML += "<div class='underscoreDiv underscoreDiv" + i + "'>___</div>";
+		gameBoard.innerHTML += "<div class='letter letter" + i + "'>" + letter + "</div>";
+		makeVar();
 		i += 1;
 	})
 }
+function makeVar(){
+	var tempLetterDiv = document.getElementsByClassName("letter" + i)[0];
+	letterDivArray.push(tempLetterDiv);
+}
 
-function guessLetter(){
-	var guess = prompt("Please guess a letter.");
+function guessLetter(letter){
+	guesses.innerHTML += " " + letter;
 	for(let i = 0; i < wordArrayBeingGuessed.length; i++){
-		if (guess === wordArrayBeingGuessed[i]){
+		if (letter === wordArrayBeingGuessed[i]){
 			// show letter
 		}
 	}
+	setTimeout(function(){guessInput.value = ""}, 2000);
 }
 
 
