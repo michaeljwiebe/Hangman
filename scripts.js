@@ -7,8 +7,7 @@
 // Without using a library, construct a wheel that spins and has values, wheel of fortune style. When the wheel lands on a value, the user should get that many points upon answering the word correctly (or go bankrupt).
 
 
-var wordBank = ["sunshine","JavaScript","gyro","Amsterdam"];
-var hintBank = ["brightnass", "adaptive, interactive!", "Kostas' snack", "Across the pond"];
+var rounds = [];
 var startBtn = document.getElementsByClassName("start")[0];
 var nextRound = document.getElementsByClassName("next-round")[0];
 var guessInput = document.getElementsByClassName("guess")[0];
@@ -17,24 +16,36 @@ var hintDisplay = document.getElementsByClassName("hint")[0];
 var gameBoard = document.getElementsByClassName("game-board")[0];
 var wordArrayBeingGuessed;
 
+var round1 = new Round("sunshine", "brightnass");
+var round2 = new Round("JavaScript", "adaptive, interactive!");
+var round3 = new Round("gyro", "Kostas snack");
+var round4 = new Round("Amsterdam", "City across the pond");
+
 startBtn.addEventListener("click", function(){
-	initGame(0);
-	startBtn.style.display = "none";
+	initGame();
 });
 nextRound.addEventListener("click", function(){
-	var round = 1;
-	initGame(round);
-	round++;
+	initGame();
 })
 document.addEventListener("keypress", function(){
 	guessLetter(event.key);
 });
 
-function initGame(index){
+function Round(word, hint){
+	this.word = word,
+	this.hint = hint
+	rounds.push(this);
+}
+
+function initGame(){
+	var random = Math.floor(Math.random()*(rounds.length));
 	gameBoard.innerHTML = "";
 	guesses.innerHTML = "";
-	hintDisplay.innerText = "The hint for this word is: " + hintBank.pop();
-	wordArrayBeingGuessed = wordBank.pop().split("");
+	var currentRound = rounds.splice(random, 1)[0];
+	var roundWord = currentRound.word;
+	var roundHint = currentRound.hint;
+	hintDisplay.innerText = "The hint for this word is: " + roundHint;
+	wordArrayBeingGuessed = roundWord.split("");
 	wordArrayBeingGuessed.forEach(function(letter, index){
 		var underscoreDiv = document.createElement("div");
 		underscoreDiv.classList.add("underscore", "underscore" + index);
@@ -56,7 +67,6 @@ function guessLetter(letter){
 			document.getElementsByClassName("letter")[i].style.display = "block";
 		}
 	}
-	//checkWord();
 	setTimeout(function(){guessInput.value = ""}, 2000);
 }
 
@@ -64,23 +74,6 @@ function nextRound(){
 	var index = 1;
 	var round = 1;
 }
-
-
-//might not need to use this function, just keep button around
-// function checkWord(){
-// 	var letterDivs = document.getElementsByClassName("letter");
-
-// 	[].forEach.call(letterDivs, function(letterDiv){
-// 		var done = false;
-// 		if (letterDiv.style.display === "none"){
-// 			return
-// 		} else {}
-// 	})
-// }
-
-
-
-
 
 
 
