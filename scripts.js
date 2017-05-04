@@ -77,11 +77,6 @@ function guessLetter(letter){
 	setTimeout(function(){guessInput.value = ""}, 2000);
 }
 
-function nextRound(){
-	var index = 1;
-	var round = 1;
-}
-
 
 
 
