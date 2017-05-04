@@ -14,39 +14,34 @@ var guessInput = document.getElementsByClassName("guess")[0];
 var guesses = document.getElementsByClassName("guesses")[0];
 var hintDisplay = document.getElementsByClassName("hint")[0];
 var gameBoard = document.getElementsByClassName("game-board")[0];
-var round = 0;
-var i;
 var wordArrayBeingGuessed;
-var letterDivArray = [];
 
 startBtn.addEventListener("click", function(){
 	initGame()
 	startBtn.style.display = "none";
 });
 document.addEventListener("keypress", function(){
-		guessLetter(event.key);
+	guessLetter(event.key);
 });
 
 function initGame(){
-	i = 0;
+	var index = 0;
+	var round = 0;
 	wordArrayBeingGuessed = wordBank[round].split("");
-	wordArrayBeingGuessed.forEach(function(letter){
-		gameBoard.innerHTML += "<div class='underscoreDiv underscoreDiv" + i + "'>___</div>";
-		gameBoard.innerHTML += "<div class='letter letter" + i + "'>" + letter + "</div>";
-		makeVar();
-		i += 1;
+	wordArrayBeingGuessed.forEach(function(letter, index){
+		gameBoard.innerHTML += "<div class='underscore underscore" + index + "'>___</div>";
+		gameBoard.innerHTML += "<div class='letter letter" + index + "'>" + letter + "</div>";
+		index += 1;
 	})
-}
-function makeVar(){
-	var tempLetterDiv = document.getElementsByClassName("letter" + i)[0];
-	letterDivArray.push(tempLetterDiv);
+	round += 1;
 }
 
 function guessLetter(letter){
 	guesses.innerHTML += " " + letter;
 	for(let i = 0; i < wordArrayBeingGuessed.length; i++){
 		if (letter === wordArrayBeingGuessed[i]){
-			// show letter
+			document.getElementsByClassName("underscore")[i].style.display = "none";
+			document.getElementsByClassName("letter")[i].style.display = "block";
 		}
 	}
 	setTimeout(function(){guessInput.value = ""}, 2000);
