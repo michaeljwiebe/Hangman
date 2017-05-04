@@ -1,0 +1,11 @@
+body{
+	background-color: darkorange;
+}
+.game-board{
+	display: flex;
+	justify-content: center;
+}
+.letter{
+	font-size: 30px;
+	display:  none;
+}
