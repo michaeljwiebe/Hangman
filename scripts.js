@@ -25,15 +25,19 @@ document.addEventListener("keypress", function(){
 });
 
 function initGame(){
-	var index = 0;
-	var round = 0;
+	hintDisplay.innerText = "The hint for this word is: " + hintBank[index];
 	wordArrayBeingGuessed = wordBank[round].split("");
-	wordArrayBeingGuessed.forEach(function(letter, index){
-		gameBoard.innerHTML += "<div class='underscore underscore" + index + "'>___</div>";
-		gameBoard.innerHTML += "<div class='letter letter" + index + "'>" + letter + "</div>";
-		index += 1;
+	wordArrayBeingGuessed.forEach(function(letter){
+		var underscoreDiv = document.createElement("div");
+		underscoreDiv.classList.add("underscore", "underscore" + index);
+		underscoreDiv.innerHTML = "___";
+		var letterDiv = document.createElement("div");
+		letterDiv.classList.add("letter", "letter" + index);
+		letterDiv.innerHTML = letter;
+
+		gameBoard.append(underscoreDiv);
+		gameBoard.append(letterDiv);
 	})
-	round += 1;
 }
 
 function guessLetter(letter){
@@ -44,10 +48,27 @@ function guessLetter(letter){
 			document.getElementsByClassName("letter")[i].style.display = "block";
 		}
 	}
+	//checkWord();
 	setTimeout(function(){guessInput.value = ""}, 2000);
 }
 
+function nextRound(){
+	var index = 1;
+	var round = 1;
+}
 
+
+//might not need to use this function, just keep button around
+// function checkWord(){
+// 	var letterDivs = document.getElementsByClassName("letter");
+
+// 	[].forEach.call(letterDivs, function(letterDiv){
+// 		var done = false;
+// 		if (letterDiv.style.display === "none"){
+// 			return
+// 		} else {}
+// 	})
+// }
 
 
 
