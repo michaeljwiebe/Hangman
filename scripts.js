@@ -20,6 +20,13 @@ var addPlayerBtn = document.getElementsByClassName("add-player")[0];
 var wordArrayBeingGuessed;
 var currentPlayer;
 
+//for rapid testing purposes ----------------
+new Player("Michael", 1);
+loadRounds();
+initGame();
+
+//end rapid testing -------------------
+
 addPlayerBtn.addEventListener("click", function(){
 	addPlayer();
 })
@@ -106,16 +113,21 @@ function initGame(){
 		hintDisplay.innerText = "The hint for this word is: " + roundHint;
 		wordArrayBeingGuessed = roundWord.split("");
 		wordArrayBeingGuessed.forEach(function(letter, index){
-			//if space, blank div
-			var underscoreDiv = document.createElement("div");
-			underscoreDiv.classList.add("underscore", "underscore" + index);
-			underscoreDiv.innerHTML = "";
-			var letterDiv = document.createElement("div");
-			letterDiv.classList.add("letter", "letter" + index);
-			letterDiv.innerHTML = letter;
+			if (letter === " "){
+				var blankDiv = document.createElement("div");
+				blankDiv.classList.add("blank");
+				gameBoard.append(blankDiv);
+			} else {
+				var underscoreDiv = document.createElement("div");
+				underscoreDiv.classList.add("underscore", "underscore" + index);
+				underscoreDiv.innerHTML = "";
+				var letterDiv = document.createElement("div");
+				letterDiv.classList.add("letter", "letter" + index);
+				letterDiv.innerHTML = letter;
 
-			gameBoard.append(underscoreDiv);
-			gameBoard.append(letterDiv);
+				gameBoard.append(underscoreDiv);
+				gameBoard.append(letterDiv);
+			}
 		});
 	} else {
 		alert("The game is finished!");
