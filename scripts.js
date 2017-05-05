@@ -111,8 +111,8 @@ function loadRounds(){
 
 function initGame(){
 	correctLetters = [];
-
 	currentPlayer = players[0];
+
 	if (rounds.length > 0){
 		var random = Math.floor(Math.random()*(rounds.length));
 		var currentRound = rounds.splice(random, 1)[0];
@@ -132,9 +132,6 @@ function initGame(){
 				spaceDiv.classList.add("space");
 				gameBoard.append(spaceDiv);
 			})
-			var blankDiv = document.createElement("div");
-			blankDiv.classList.add("blank");
-			gameBoard.append(blankDiv);
 		} else {
 			var letterArray = roundWord.split("");
 			displayBlankDivs(letterArray);
