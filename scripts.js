@@ -5,9 +5,6 @@
 // Make your game multiplayer. Players should be objects.
 // Without using a library, construct a wheel that spins and has values, wheel of fortune style. When the wheel lands on a value, the user should get that many points upon answering the word correctly (or go bankrupt).
 
-
-var rounds = [];
-var players = [];
 var startBtn = document.getElementsByClassName("start")[0];
 var nextRound = document.getElementsByClassName("next-round")[0];
 var guessInput = document.getElementsByClassName("guess")[0];
@@ -17,7 +14,11 @@ var gameBoard = document.getElementsByClassName("game-board")[0];
 var scoreBoard = document.getElementsByClassName("score-board")[0];
 var playerDiv = document.getElementsByClassName("player")[0];
 var addPlayerBtn = document.getElementsByClassName("add-player")[0];
-var wordArrayBeingGuessed;
+
+var rounds = [];
+var players = [];
+var correctLetters = [];
+var roundWord;
 var currentPlayer;
 
 //for rapid testing purposes ----------------
@@ -39,9 +40,10 @@ nextRound.addEventListener("click", function(){
 	initGame();
 })
 document.addEventListener("keypress", function(){
-	// players[0].guessLetter(event.key);// works
-	currentPlayer.guessLetter(event.key); //doesn't work
+	currentPlayer.guessLetter(event.key);
 });
+
+//add Game constructor
 
 function addPlayer(){
 	var playerNum = players.length + 1;
@@ -74,15 +76,21 @@ function Player(name, num){
 
 	function guessLetter(letter, player){
 		//allow guessing each letter once
+		// var letterDivs = document.getElementsByClassName("letter");
+
+		letter = letter.toLowerCase();
 		guesses.innerHTML += " " + letter;
-		for(let i = 0; i < wordArrayBeingGuessed.length; i++){
-			if (letter === wordArrayBeingGuessed[i].toLowerCase()){
+		var joinedWord = roundWord.split(" ").join("");
+		for(let i = 0; i < joinedWord.length; i++){
+			if (letter === joinedWord[i].toLowerCase()){
 				document.getElementsByClassName("underscore")[i].style.display = "none";
 				document.getElementsByClassName("letter")[i].style.display = "block";
+
+				// if(correctLetters.indexOf(letter) === -1){
+					correctLetters.push(letter)
+				// }
 			}
-			var correctLetters = [];
-			correctLetters += letter;
-			if (correctLetters.length === wordArrayBeingGuessed.length){
+			if (correctLetters.length === joinedWord.length){
 				alert("You win this round! +1000 points");
 			}
 		}
@@ -98,39 +106,56 @@ function loadRounds(){
 	var round5 = new Round("rotweiler", "Scary dog");
 	var round6 = new Round("Gary Fisher", "fast bike");
 	var round7 = new Round("New Zealand", "Maori country");
-	var round8 = new Round("HTML+CSS", "WebDev languages");
+	var round8 = new Round("HTML + CSS", "WebDev languages");
 };
 
 function initGame(){
+	correctLetters = [];
+
 	currentPlayer = players[0];
 	if (rounds.length > 0){
 		var random = Math.floor(Math.random()*(rounds.length));
+		var currentRound = rounds.splice(random, 1)[0];
+		var roundHint = currentRound.hint;
+		var index = 0;
+		
+		roundWord = currentRound.word;
 		gameBoard.innerHTML = "";
 		guesses.innerHTML = "";
-		var currentRound = rounds.splice(random, 1)[0];
-		var roundWord = currentRound.word;
-		var roundHint = currentRound.hint;
 		hintDisplay.innerText = "The hint for this word is: " + roundHint;
-		wordArrayBeingGuessed = roundWord.split("");
-		wordArrayBeingGuessed.forEach(function(letter, index){
-			if (letter === " "){
-				var blankDiv = document.createElement("div");
-				blankDiv.classList.add("blank");
-				gameBoard.append(blankDiv);
-			} else {
-				var underscoreDiv = document.createElement("div");
-				underscoreDiv.classList.add("underscore", "underscore" + index);
-				underscoreDiv.innerHTML = "";
-				var letterDiv = document.createElement("div");
-				letterDiv.classList.add("letter", "letter" + index);
-				letterDiv.innerHTML = letter;
-
-				gameBoard.append(underscoreDiv);
-				gameBoard.append(letterDiv);
-			}
-		});
+		if (roundWord.indexOf(" ") > -1){
+			var wordArray = roundWord.split(" ");
+			wordArray.forEach(function(word){
+				var letterArrays = word.split("");
+				displayBlankDivs(letterArrays);
+				var spaceDiv = document.createElement("div");
+				spaceDiv.classList.add("space");
+				gameBoard.append(spaceDiv);
+			})
+			var blankDiv = document.createElement("div");
+			blankDiv.classList.add("blank");
+			gameBoard.append(blankDiv);
+		} else {
+			var letterArray = roundWord.split("");
+			displayBlankDivs(letterArray);
+		}
 	} else {
 		alert("The game is finished!");
+	}
+
+	function displayBlankDivs(letterArray){
+		letterArray.forEach(function(letter){
+			var underscoreDiv = document.createElement("div");
+			underscoreDiv.classList.add("underscore", "underscore" + index);
+			underscoreDiv.innerHTML = "";
+			var letterDiv = document.createElement("div");
+			letterDiv.classList.add("letter", "letter" + index);
+			letterDiv.innerHTML = letter;
+
+			gameBoard.append(underscoreDiv);
+			gameBoard.append(letterDiv);
+			index += 1;
+		})
 	}
 }
 
