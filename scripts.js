@@ -73,10 +73,10 @@ function Player(name, num){
 	playerDiv.append(playerScore);
 
 	function guessLetter(letter, player){
-		//deal with capitalized letters
+		//allow guessing each letter once
 		guesses.innerHTML += " " + letter;
 		for(let i = 0; i < wordArrayBeingGuessed.length; i++){
-			if (letter === wordArrayBeingGuessed[i]){
+			if (letter === wordArrayBeingGuessed[i].toLowerCase()){
 				document.getElementsByClassName("underscore")[i].style.display = "none";
 				document.getElementsByClassName("letter")[i].style.display = "block";
 			}
