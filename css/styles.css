@@ -1,7 +1,11 @@
 body {
-  background-color: darkorange; }
+  background-color: darkorange;
+  font-family: Helvetica, sans-serif; }
 
 .game-board {
+  margin-top: 20px; }
+
+.flex {
   display: flex;
   justify-content: center; }
 
@@ -10,6 +14,16 @@ body {
   display: none; }
 
 .underscore, .letter {
-  margin: 5px; }
+  margin: 5px;
+  width: 40px;
+  height: 50px;
+  border: 4px solid black;
+  background-color: lightgrey;
+  text-align: center;
+  font-size: 45px; }
+
+.game-console {
+  text-align: center;
+  margin: 20px auto; }
 
 /*# sourceMappingURL=styles.css.map */

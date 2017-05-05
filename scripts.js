@@ -15,8 +15,14 @@ var guesses = document.getElementsByClassName("guesses")[0];
 var hintDisplay = document.getElementsByClassName("hint")[0];
 var gameBoard = document.getElementsByClassName("game-board")[0];
 var scoreBoard = document.getElementsByClassName("score-board")[0];
+var playerDiv = document.getElementsByClassName("player")[0];
+var addPlayerBtn = document.getElementsByClassName("add-player")[0];
 var wordArrayBeingGuessed;
+var currentPlayer;
 
+addPlayerBtn.addEventListener("click", function(){
+	addPlayer();
+})
 
 startBtn.addEventListener("click", function(){
 	loadRounds();
@@ -26,8 +32,15 @@ nextRound.addEventListener("click", function(){
 	initGame();
 })
 document.addEventListener("keypress", function(){
-	guessLetter(event.key);
+	// players[0].guessLetter(event.key);// works
+	currentPlayer.guessLetter(event.key); //doesn't work
 });
+
+function addPlayer(){
+	var playerNum = players.length + 1;
+	var name = prompt("Please enter your name.");
+	var player = new Player(name, playerNum);
+}
 
 function Round(word, hint){
 	this.word = word,
@@ -35,16 +48,39 @@ function Round(word, hint){
 	rounds.push(this);
 }
 
-function Player(name){
+function Player(name, num){
 	this.name = name,
-	this.score = 0
+	this.score = 0,
+	this.guessLetter = guessLetter,
+	this.playerNum = num
+	players.push(this);
 	var playerDiv = document.createElement("div");
 	var playerName = document.createElement("h2");
 	var playerScore = document.createElement("h2");
-	playerDiv.append(playerName);
-	playerDiv.append(playerScore);
+	playerDiv.classList.add("flex");
+
 	playerName.innerHTML = this.name;
 	playerScore.innerHTML = this.score;
+
+	playerDiv.append(playerName);
+	playerDiv.append(playerScore);
+
+	function guessLetter(letter, player){
+		//deal with capitalized letters
+		guesses.innerHTML += " " + letter;
+		for(let i = 0; i < wordArrayBeingGuessed.length; i++){
+			if (letter === wordArrayBeingGuessed[i]){
+				document.getElementsByClassName("underscore")[i].style.display = "none";
+				document.getElementsByClassName("letter")[i].style.display = "block";
+			}
+			var correctLetters = [];
+			correctLetters += letter;
+			if (correctLetters.length === wordArrayBeingGuessed.length){
+				alert("You win this round! +1000 points");
+			}
+		}
+		setTimeout(function(){guessInput.value = ""}, 2000);
+	}
 }
 
 function loadRounds(){
@@ -59,6 +95,7 @@ function loadRounds(){
 };
 
 function initGame(){
+	currentPlayer = players[0];
 	if (rounds.length > 0){
 		var random = Math.floor(Math.random()*(rounds.length));
 		gameBoard.innerHTML = "";
@@ -69,9 +106,10 @@ function initGame(){
 		hintDisplay.innerText = "The hint for this word is: " + roundHint;
 		wordArrayBeingGuessed = roundWord.split("");
 		wordArrayBeingGuessed.forEach(function(letter, index){
+			//if space, blank div
 			var underscoreDiv = document.createElement("div");
 			underscoreDiv.classList.add("underscore", "underscore" + index);
-			underscoreDiv.innerHTML = "___";
+			underscoreDiv.innerHTML = "";
 			var letterDiv = document.createElement("div");
 			letterDiv.classList.add("letter", "letter" + index);
 			letterDiv.innerHTML = letter;
@@ -84,16 +122,7 @@ function initGame(){
 	}
 }
 
-function guessLetter(letter){
-	guesses.innerHTML += " " + letter;
-	for(let i = 0; i < wordArrayBeingGuessed.length; i++){
-		if (letter === wordArrayBeingGuessed[i]){
-			document.getElementsByClassName("underscore")[i].style.display = "none";
-			document.getElementsByClassName("letter")[i].style.display = "block";
-		}
-	}
-	setTimeout(function(){guessInput.value = ""}, 2000);
-}
+
 
 
 
