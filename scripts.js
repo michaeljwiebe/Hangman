@@ -23,7 +23,10 @@ var currentPlayer;
 
 //for rapid testing purposes ----------------
 new Player("Michael", 1);
+new Player("Liz", 2);
 loadRounds();
+currentPlayer = players[0];
+players[0].currentPlayer = true;
 initGame();
 
 //end rapid testing -------------------
@@ -34,21 +37,27 @@ addPlayerBtn.addEventListener("click", function(){
 
 startBtn.addEventListener("click", function(){
 	loadRounds();
+	currentPlayer = players[0];
 	initGame();
 });
 nextRound.addEventListener("click", function(){
 	initGame();
-})
+});
 document.addEventListener("keypress", function(){
 	currentPlayer.guessLetter(event.key);
 });
 
-//add Game constructor
+//add Game constructor - attempted but decided to focus on other features
 
 function addPlayer(){
 	var playerNum = players.length + 1;
-	var name = prompt("Please enter your name.");
-	var player = new Player(name, playerNum);
+	if (playerNum < 3){
+		var name = prompt("Please enter your name.");
+		var player = new Player(name, playerNum);
+	} else {
+		alert("this game is 2 player only");
+	}
+
 }
 
 function Round(word, hint){
@@ -61,7 +70,9 @@ function Player(name, num){
 	this.name = name,
 	this.score = 0,
 	this.guessLetter = guessLetter,
-	this.playerNum = num
+	this.playerNum = num,
+	this.currentPlayer = false
+
 	players.push(this);
 	var playerDiv = document.createElement("div");
 	var playerName = document.createElement("h2");
@@ -74,27 +85,47 @@ function Player(name, num){
 	playerDiv.append(playerName);
 	playerDiv.append(playerScore);
 
-	function guessLetter(letter, player){
+	function guessLetter(letter){
 		//allow guessing each letter once
 		// var letterDivs = document.getElementsByClassName("letter");
 
 		letter = letter.toLowerCase();
 		guesses.innerHTML += " " + letter;
 		var joinedWord = roundWord.split(" ").join("");
+		var correct = 0;
+
 		for(let i = 0; i < joinedWord.length; i++){
 			if (letter === joinedWord[i].toLowerCase()){
+				correct += 1;
+				console.log(correct);
 				document.getElementsByClassName("underscore")[i].style.display = "none";
 				document.getElementsByClassName("letter")[i].style.display = "block";
 
 				// if(correctLetters.indexOf(letter) === -1){
-					correctLetters.push(letter)
+				correctLetters.push(letter)
 				// }
 			}
 			if (correctLetters.length === joinedWord.length){
 				alert("You win this round! +1000 points");
 			}
 		}
+		if (correct === 0) {
+			nextPlayer();
+		}
 		setTimeout(function(){guessInput.value = ""}, 2000);
+	}
+}
+
+//switches nicely between two players only
+function nextPlayer(){
+	console.log(currentPlayer);
+	for(let i = 0; i < players.length; i++){
+		if (players[i].currentPlayer === true){
+			players[i].currentPlayer = false;
+		} else {
+			players[i].currentPlayer = true;
+			currentPlayer = players[i];
+		}
 	}
 }
 
@@ -111,7 +142,7 @@ function loadRounds(){
 
 function initGame(){
 	correctLetters = [];
-	currentPlayer = players[0];
+	nextPlayer();
 
 	if (rounds.length > 0){
 		var random = Math.floor(Math.random()*(rounds.length));
