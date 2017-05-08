@@ -113,32 +113,35 @@ function Player(name, num){
 		var joinedWord = roundWord.split(" ").join("");
 		var correct = 0;
 
-		for(let i = 0; i < joinedWord.length; i++){
-			if (letter === joinedWord[i].toLowerCase()){
-				correct += 1;
-				document.getElementsByClassName("underscore")[i].style.display = "none";
-				document.getElementsByClassName("letter")[i].style.display = "block";
-				currentPlayer.score += 100;
-			}
-			if (i === joinedWord.length - 1 && correct > 0){
-				playerCorrectLetters.push(letter)
-			}
-		}
-		console.log(playerCorrectLetters);
 		if (playerCorrectLetters.indexOf(letter) > -1){
 			announcements.innerHTML = "The letter " + letter + " has already been guessed. Please guess again.";
 			console.log(announcements.innerHTML);
-		} else if (correct > 0){
+		} else {
+			for(let i = 0; i < joinedWord.length; i++){
+				if (letter === joinedWord[i].toLowerCase()){
+					correct += 1;
+					document.getElementsByClassName("underscore")[i].style.display = "none";
+					document.getElementsByClassName("letter")[i].style.display = "block";
+					currentPlayer.score += 100;
+				}
+				if (i === joinedWord.length - 1 && correct > 0){
+					playerCorrectLetters.push(letter)
+				}
+			}
+			console.log(playerCorrectLetters);
+		}
+
+		if (correct > 0){
 			announcements.innerHTML = "The letter " + letter + " was in this word " + correct + " times. You get " + correct * 100 + " points.";
 		} else {
 			announcements.innerHTML = "Your guess of the letter " + letter + " was incorrect or has already been guessed. You lose 200 points.";
 			this.score -= 200;
-			setTimeout(function(){nextPlayer()}, 1500);
+			setTimeout(function(){nextPlayer()}, 3000);
 		} 
 		if (playerCorrectLetters.length === roundCorrectLetters.length){
 			announcements.innerHTML = "You win this round! +1000 points";
 			this.score += 1000;
-			initGame();
+			setTimeout(function(){initGame()}, 3000);
 		}
 		updateScoreBoard();
 	}
