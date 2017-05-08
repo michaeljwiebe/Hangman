@@ -115,7 +115,6 @@ function Player(name, num){
 
 		if (playerCorrectLetters.indexOf(letter) > -1){
 			announcements.innerHTML = "The letter " + letter + " has already been guessed. Please guess again.";
-			console.log(announcements.innerHTML);
 		} else {
 			for(let i = 0; i < joinedWord.length; i++){
 				if (letter === joinedWord[i].toLowerCase()){
@@ -133,8 +132,8 @@ function Player(name, num){
 
 		if (correct > 0){
 			announcements.innerHTML = "The letter " + letter + " was in this word " + correct + " times. You get " + correct * 100 + " points.";
-		} else {
-			announcements.innerHTML = "Your guess of the letter " + letter + " was incorrect or has already been guessed. You lose 200 points.";
+		} else if(playerCorrectLetters.indexOf(letter) === -1) {
+			announcements.innerHTML = "Your guess of the letter " + letter + " was incorrect. You lose 200 points.";
 			this.score -= 200;
 			setTimeout(function(){nextPlayer()}, 3000);
 		} 
