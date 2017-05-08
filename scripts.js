@@ -7,7 +7,6 @@
 
 var startBtn = document.getElementsByClassName("start")[0];
 var nextRound = document.getElementsByClassName("next-round")[0];
-var guessInput = document.getElementsByClassName("guess")[0];
 var guesses = document.getElementsByClassName("guesses")[0];
 var hintDisplay = document.getElementsByClassName("hint")[0];
 var gameBoard = document.getElementsByClassName("game-board")[0];
@@ -52,7 +51,7 @@ document.addEventListener("keypress", function(){
 
 //add Game constructor - attempted but decided to focus on other features
 
-function addPlayer(){
+function addPlayer(){ //issues with this not putting up the prompt
 	var playerNum = players.length + 1;
 	console.log(playerNum);
 
@@ -120,29 +119,31 @@ function Player(name, num){
 				document.getElementsByClassName("underscore")[i].style.display = "none";
 				document.getElementsByClassName("letter")[i].style.display = "block";
 				currentPlayer.score += 100;
-				if(playerCorrectLetters.indexOf(letter) === -1){
-					playerCorrectLetters.push(letter)
-				}
+			}
+			if (i === joinedWord.length - 1 && correct > 0){
+				playerCorrectLetters.push(letter)
 			}
 		}
-		// If fixing this, would need to build correctLetters array first then build playerCorrectLetter array with each guess, once equal in length, then the round is won.
+		console.log(playerCorrectLetters);
+		if (playerCorrectLetters.indexOf(letter) > -1){
+			announcements.innerHTML = "The letter " + letter + " has already been guessed. Please guess again.";
+			console.log(announcements.innerHTML);
+		} else if (correct > 0){
+			announcements.innerHTML = "The letter " + letter + " was in this word " + correct + " times. You get " + correct * 100 + " points.";
+		} else {
+			announcements.innerHTML = "Your guess of the letter " + letter + " was incorrect or has already been guessed. You lose 200 points.";
+			this.score -= 200;
+			setTimeout(function(){nextPlayer()}, 1500);
+		} 
 		if (playerCorrectLetters.length === roundCorrectLetters.length){
 			announcements.innerHTML = "You win this round! +1000 points";
 			this.score += 1000;
-		}
-		if (correct === 0) {
-			announcements.innerHTML = "Your guess of the letter " + letter + " was incorrect.";
-			this.score -= 200;
-			setTimeout(function(){nextPlayer()}, 1500);
-		} else {
-			announcements.innerHTML = letter + " was in this word " + correct + " times. You get " + correct * 100 + " points.";
+			initGame();
 		}
 		updateScoreBoard();
-		setTimeout(function(){guessInput.value = ""}, 2000);
 	}
 }
 
-//switches nicely between two players only
 function nextPlayer(){
 	console.log(currentPlayer);
 	var playerIndicator = document.createElement("div");
@@ -155,7 +156,7 @@ function nextPlayer(){
 			currentPlayer = players[i];
 		}
 	}
-	announcements.innerHTML = currentPlayer.name + ", take your turn.";
+	announcements.innerHTML = currentPlayer.name + ", guess a letter.";
 }
 
 function loadRounds(){
@@ -171,6 +172,7 @@ function loadRounds(){
 
 function initGame(){
 	roundCorrectLetters = [];
+	playerCorrectLetters = [];
 	nextPlayer();
 
 	if (rounds.length > 0){
@@ -184,12 +186,10 @@ function initGame(){
 		guesses.innerHTML = "";
 		hintDisplay.innerText = "The hint for this word is: " + roundHint;
 		roundWord.split("").forEach(function(letter){
-			if (roundCorrectLetters.indexOf("letter") === -1 && letter != " "){
-			roundCorrectLetters.push()
+			if (roundCorrectLetters.indexOf(letter) === -1 && letter != " "){
+				roundCorrectLetters.push(letter);
 			}
 		})
-			console.log(roundCorrectLetters);
-
 
 		if (roundWord.indexOf(" ") > -1){
 			var wordArray = roundWord.split(" ");
