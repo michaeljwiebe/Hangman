@@ -6,7 +6,6 @@ var gameBoard = document.getElementsByClassName("game-board")[0];
 var scoreBoard = document.getElementsByClassName("score-board")[0];
 var playerDiv = document.getElementsByClassName("player")[0];
 var playerScoreDivs = document.getElementsByClassName("score");
-var addPlayerBtn = document.getElementsByClassName("add-player")[0];
 var announcements = document.getElementsByClassName("announcements")[0];
 
 var rounds = [];
@@ -16,19 +15,12 @@ var roundWord;
 var currentPlayer;
 var roundCorrectLetters = [];
 
-//for rapid testing purposes ----------------
 new Player("Player 1", 1);
-new Player("Player 2", 2);]
+new Player("Player 2", 2);
 loadRounds();
 currentPlayer = players[0];
 players[0].currentPlayer = true;
 initGame();
-
-//end rapid testing -------------------
-
-addPlayerBtn.addEventListener("click", function(){
-	addPlayer();
-})
 
 startBtn.addEventListener("click", function(){
 	loadRounds();
@@ -41,21 +33,6 @@ nextRound.addEventListener("click", function(){
 document.addEventListener("keypress", function(){
 	currentPlayer.guessLetter(event.key);
 });
-
-//add Game constructor - attempted but decided to focus on other features
-
-function addPlayer(){ //issues with this not putting up the prompt
-	var playerNum = players.length + 1;
-	console.log(playerNum);
-
-	if(playerNum <=3){
-		var name = prompt("Please enter your name.");
-		var player = new Player(name, playerNum);
-	} else {
-		alert("this game is 2 player only");
-	}
-
-}
 
 function Round(word, hint){
 	this.word = word,
@@ -99,7 +76,6 @@ function Player(name, num){
 	}
 
 	function guessLetter(letter){
-		//allow guessing each letter only once
 		letter = letter.toLowerCase();
 		guesses.innerHTML += " " + letter;
 		var joinedWord = roundWord.split(" ").join("");
@@ -119,7 +95,6 @@ function Player(name, num){
 					playerCorrectLetters.push(letter)
 				}
 			}
-			console.log(playerCorrectLetters);
 		}
 
 		if (correct > 0){
@@ -139,9 +114,6 @@ function Player(name, num){
 }
 
 function nextPlayer(){
-	console.log(currentPlayer);
-	var playerIndicator = document.createElement("div");
-
 	for(let i = 0; i < players.length; i++){
 		if (players[i].currentPlayer === true){
 			players[i].currentPlayer = false;
@@ -151,19 +123,6 @@ function nextPlayer(){
 		}
 	}
 	announcements.innerHTML = currentPlayer.name + ", guess a letter.";
-}
-
-//switches nicely between two players only
-function nextPlayer(){
-	console.log(currentPlayer);
-	for(let i = 0; i < players.length; i++){
-		if (players[i].currentPlayer === true){
-			players[i].currentPlayer = false;
-		} else {
-			players[i].currentPlayer = true;
-			currentPlayer = players[i];
-		}
-	}
 }
 
 function loadRounds(){
